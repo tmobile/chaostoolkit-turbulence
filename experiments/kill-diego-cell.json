@@ -1,0 +1,34 @@
+{
+    "version": "1.0.0",
+    "title": "What is the impact of killing one random diego cell?",
+    "description": "If a diego-cell dies, then it should be restarted automatically and any applications on it should be relocated temporarily",
+    "tags": ["tls"],
+    "steady-state-hypothesis": {
+        "title": "Application responds",
+        "probes": []
+    },
+	"configuration": {
+		"turb_api_url": "https://turbulence:admin@10.244.0.35:8080",
+		"turb_verify_ssl": false
+	},
+    "method": [
+        {
+			"type": "action",
+			"name": "terminate-diego-cells",
+			"provider": {
+				"type": "python",
+				"module": "chaosturbulence.actions",
+				"func": "attack",
+				"arguments": {
+					"task": { "Type": "Kill" },
+					"selector": {
+						"Deployment": {"Name": "cf"},
+						"Group": {"Name": "diego-cell"},
+						"ID": {"Limit": 1}
+					}
+				}
+			}
+		}
+    ],
+    "rollbacks": []
+}
